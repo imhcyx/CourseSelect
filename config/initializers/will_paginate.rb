@@ -1,3 +1,4 @@
+require 'will_paginate/array'
 if defined?(WillPaginate)
   module WillPaginate
     module ActiveRecord

@@ -1,5 +1,7 @@
 class CoursesController < ApplicationController
 
+  include CoursesHelper
+
   before_action :student_logged_in, only: [:select, :quit, :list]
   before_action :teacher_logged_in, only: [:new, :create, :edit, :destroy, :update, :open, :close]#add open by qiao
   before_action :logged_in, only: :index
@@ -59,15 +61,16 @@ class CoursesController < ApplicationController
 
   def list
     #-------QiaoCode--------
-    @courses = Course.where(:open=>true).paginate(page: params[:page], per_page: 4)
+    @courses = Course.where(:open=>true)
     @course = @courses-current_user.courses
-    tmp=[]
-    @course.each do |course|
-      if course.open==true
-        tmp<<course
-      end
-    end
-    @course=tmp
+    @course_type = get_course_info(@course, 'course_type')
+    @course.select! {|course| course.open}
+    @course.select! {|course|
+        check_course_time(course, params['course']['course_time']) and
+        check_course_type(course, params['course']['course_type']) and
+        check_course_keyword(course, params['keyword'])
+    } if request.post?
+    @course = @course.paginate(page: params[:page], per_page: 10)
   end
 
   def select
@@ -88,8 +91,8 @@ class CoursesController < ApplicationController
   #-------------------------for both teachers and students----------------------
 
   def index
-    @course=current_user.teaching_courses.paginate(page: params[:page], per_page: 4) if teacher_logged_in?
-    @course=current_user.courses.paginate(page: params[:page], per_page: 4) if student_logged_in?
+    @course=current_user.teaching_courses.paginate(page: params[:page], per_page: 10) if teacher_logged_in?
+    @course=current_user.courses.paginate(page: params[:page], per_page: 10) if student_logged_in?
   end
 
 

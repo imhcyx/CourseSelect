@@ -10,12 +10,38 @@
           <h3 class="panel-title">选修课程</h3>
         </div>
         <div class="panel-body" style="min-height: 450px">
+          <%= form_tag list_courses_path 1, method: :post do %>
+            <div class="form-group form-inline">
+              <label for="course[course_type]" style="margin-left: 100px;">课程类型：</label>
+              <select name="course[course_type]" style="margin-right: 50px;">
+                <option value="">不限</option>
+                <% @course_type.each do |type| %>
+                  <option value="<%= type %>"><%= type %></option>
+                <% end %>
+              </select>
+              <label for="course[course_time]">上课时间：</label>
+              <select name="course[course_time]]" style="margin-right: 50px;">
+                <option value="">不限</option>
+                <option value="1">星期一</option>
+                <option value="2">星期二</option>
+                <option value="3">星期三</option>
+                <option value="4">星期四</option>
+                <option value="5">星期五</option>
+                <option value="6">星期六</option>
+                <option value="7">星期日</option>
+              </select>
+              <label for="keyword">课程名称：</label>
+              <%= text_field_tag(:keyword, nil, style: 'width:auto', placeholder: '请输入关键词')%>
+              <button type="submit" id="query" class="btn btn-success" style="margin-left: 50px; width: 80px;">查询</button>
+            </div>
+          <% end %>
           <table class="table table-striped table-hover">
             <thead>
 
             <tr>
               <th>课程编号</th>
               <th>课程名称</th>
+              <th>上课时间</th>
               <th>课时/学分</th>
               <th>限选</th>
               <th>已选</th>
@@ -28,11 +54,12 @@
             </thead>
             <tbody>
 
-            <% @courses.each do |course| %>
+            <% @course.each do |course| %>
                 <tr>
 
                   <td><%= course.course_code %></td>
                   <td><%= course.name %></td>
+                  <td><%= course.course_time %></td>
                   <td><%= course.credit %></td>
                   <td><%= course.limit_num %></td>
                   <td><%= course.student_num %></td>
@@ -46,7 +73,7 @@
             <% end %>
             </tbody>
           </table>
-          <%= will_paginate @courses %>
+          <%= will_paginate @course %>
         </div>
       </div>
     </div>
