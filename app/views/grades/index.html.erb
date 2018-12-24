@@ -34,14 +34,15 @@
                   <td><%= grade.user.department %></td>
                   <td><%= grade.course.name %></td>
                   <td><%= grade.grade %></td>
-
                   <% if teacher_logged_in? %>
+                    <td>
                       <%= form_for grade, url: grade_url(id: grade.id, course_id: grade.course.id), method: :patch do |f| %>
-                          <td><%= f.text_field :grade %></td>
-                          <td><%= f.submit "提交", class: "btn btn-success btn-xs" %></td>
+                          <%= f.text_field :grade %>
+                          <%= f.submit "提交", class: "btn btn-success btn-xs" %>
                       <% end %>
+                    </td>
                   <% end %>
-
+                  
                 </tr>
             <% end %>
             </tbody>

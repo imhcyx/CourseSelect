@@ -73,6 +73,9 @@ class CoursesController < ApplicationController
     @course = @course.paginate(page: params[:page], per_page: 10)
   end
 
+  def prompt
+  end
+
   def select
     @course=Course.find_by_id(params[:id])
     current_user.courses<<@course
