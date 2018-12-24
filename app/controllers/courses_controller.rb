@@ -74,6 +74,12 @@ class CoursesController < ApplicationController
   end
 
   def prompt
+    @public_elective_credits = get_course_credits(current_user.courses, '公共选修')
+    @public_elective_credits_obtained = get_obtained_credits(current_user.grades, '公共选修')
+    @major_credits = get_course_credits(current_user.courses, '专业')
+    @major_credits_obtained = get_obtained_credits(current_user.grades, '专业')
+    @total_credits = get_course_credits(current_user.courses)
+    @total_credits_obtained = get_obtained_credits(current_user.grades)
   end
 
   def select

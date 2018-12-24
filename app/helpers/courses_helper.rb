@@ -26,4 +26,21 @@ module CoursesHelper
         value.nil? or value == '' or course['name'].include? value
     end
     
+    def get_course_credit(course)
+        course.credit.split('/')[1].to_f
+    end
+    
+    def get_course_credits(courses, keyword='')
+        courses.
+        select {|course| keyword == '' or course['course_type'].include? keyword}.
+        sum {|course| get_course_credit(course)}
+    end
+    
+    def get_obtained_credits(grades, keyword='')
+        grades.
+        select {|grade| keyword == '' or grade.course['course_type'].include? keyword}.
+        select {|grade| grade.grade.to_f >= 60}.
+        sum {|grade| get_course_credit(grade.course)}
+    end
+    
 end
