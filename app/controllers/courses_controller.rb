@@ -86,6 +86,10 @@ class CoursesController < ApplicationController
     @obtained_course_names = current_user.grades.select {|grade| grade.grade.to_f >= 60}.map {|grade| grade.course['name']}
   end
 
+  def schedule
+    @schedule = get_schedule(current_user.courses)
+  end
+
   def select
     @course=Course.find_by_id(params[:id])
     current_user.courses<<@course
