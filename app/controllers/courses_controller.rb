@@ -2,7 +2,7 @@ class CoursesController < ApplicationController
 
   include CoursesHelper
 
-  before_action :student_logged_in, only: [:select, :quit, :list]
+  before_action :student_logged_in, only: [:select, :quit, :list, :prompt]
   before_action :teacher_logged_in, only: [:new, :create, :edit, :destroy, :update, :open, :close]#add open by qiao
   before_action :logged_in, only: :index
 
@@ -77,9 +77,13 @@ class CoursesController < ApplicationController
     @public_elective_credits = get_course_credits(current_user.courses, '公共选修')
     @public_elective_credits_obtained = get_obtained_credits(current_user.grades, '公共选修')
     @major_credits = get_course_credits(current_user.courses, '专业')
+    @major_credits += get_course_credits(current_user.courses, '一级学科')
     @major_credits_obtained = get_obtained_credits(current_user.grades, '专业')
+    @major_credits_obtained += get_obtained_credits(current_user.grades, '一级学科')
     @total_credits = get_course_credits(current_user.courses)
     @total_credits_obtained = get_obtained_credits(current_user.grades)
+    @selected_course_names = current_user.courses.map {|course| course['name']}
+    @obtained_course_names = current_user.grades.select {|grade| grade.grade.to_f >= 60}.map {|grade| grade.course['name']}
   end
 
   def select

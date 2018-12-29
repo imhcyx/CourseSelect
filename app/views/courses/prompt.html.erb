@@ -23,24 +23,67 @@
             <tbody>
             <tr>
               <td>学习要求</td>
-              <td>人文系列讲座（1学分）<br>xxx<br>xxx</td>
+              <td>
+                <p>人文系列讲座（1学分）</p>
+                <p>中国特色社会主义理论与实践研究（1学分）</p>
+                <p>自然辩证法概论（1学分）</p>
+                <p>硕士学位英语（英语A）（3学分）</p>
+              </td>
               <td>>=2学分</td>
               <td>>=12学分</td>
               <td>>=30学分</td>
             </tr>
             <tr>
               <td>选课情况</td>
-              <td></td>
-              <td><%= @public_elective_credits %></td>
-              <td><%= @major_credits %></td>
-              <td><%= @total_credits %></td>
+              <td>
+                <p style="<%= "color:#ff0000" if !@selected_course_names.include? '人文系列讲座' %>">
+                  人文系列讲座（1学分）
+                </p>
+                <p style="<%= "color:#ff0000" if !@selected_course_names.include? '中国特色社会主义理论与实践研究' %>">
+                  中国特色社会主义理论与实践研究（1学分）
+                </p>
+                <p style="<%= "color:#ff0000" if !@selected_course_names.include? '自然辩证法概论' %>">
+                  自然辩证法概论（1学分）
+                </p>
+                <p style="<%= "color:#ff0000" if !@selected_course_names.include? '硕士学位英语（英语A）' %>">
+                  硕士学位英语（英语A）（3学分）
+                </p>
+              </td>
+              <td style="<%= "color:#ff0000" if @public_elective_credits < 2.0 %>">
+                <%= @public_elective_credits %>
+              </td>
+              <td style="<%= "color:#ff0000" if @major_credits < 12.0 %>">
+                <%= @major_credits %>
+              </td>
+              <td style="<%= "color:#ff0000" if @total_credits < 30.0 %>">
+                <%= @total_credits %>
+              </td>
             </tr>
             <tr>
               <td>获取学分</td>
-              <td></td>
-              <td><%= @public_elective_credits_obtained %></td>
-              <td><%= @major_credits_obtained %></td>
-              <td><%= @total_credits_obtained %></td>
+              <td>
+                <p style="<%= "color:#ff0000" if !@obtained_course_names.include? '人文系列讲座' %>">
+                  人文系列讲座（1学分）
+                </p>
+                <p style="<%= "color:#ff0000" if !@obtained_course_names.include? '中国特色社会主义理论与实践研究' %>">
+                  中国特色社会主义理论与实践研究（1学分）
+                </p>
+                <p style="<%= "color:#ff0000" if !@obtained_course_names.include? '自然辩证法概论' %>">
+                  自然辩证法概论（1学分）
+                </p>
+                <p style="<%= "color:#ff0000" if !@obtained_course_names.include? '硕士学位英语（英语A）' %>">
+                  硕士学位英语（英语A）（3学分）
+                </p>
+              </td>
+              <td style="<%= "color:#ff0000" if @public_elective_credits_obtained < 2.0 %>">
+                <%= @public_elective_credits_obtained %>
+              </td>
+              <td style="<%= "color:#ff0000" if @major_credits_obtained < 12.0 %>">
+                <%= @major_credits_obtained %>
+              </td>
+              <td style="<%= "color:#ff0000" if @total_credits_obtained < 30.0 %>">
+                <%= @total_credits_obtained %>
+              </td>
             </tr>
             </tbody>
           </table>
