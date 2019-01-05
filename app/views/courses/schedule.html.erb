@@ -24,18 +24,31 @@
             </tr>
             </thead>
             <tbody>
-            <% 12.times do |j| %>
-            <tr>
-              <% if j%4==0 %>
-              <th rowspan="4">上午</th>
-              <% end %>
-              <th><%= j+1 %></th>
-              <% 7.times do |i| %>
-              <th>
-                <%= @schedule[i][j].name if @schedule[i][j]%>
-              </th>
-              <% end %>
-            </tr>
+            <% 11.times do |j| %>
+              <tr>
+                <% if j%4==0 %>
+                  <td rowspan="4">
+                    <%= ['上午','下午','晚上'][j/4] %>
+                  </td>
+                <% end %>
+                <td><%= j+1 %></td>
+                <% 7.times do |i| %>
+                  <% if @schedule[i][j] %>
+                    <td class="success">
+                      <a href="#"
+                      data-toggle="popover"
+                      data-name="<%= @schedule[i][j].name%>"
+                      data-week="<%= @schedule[i][j].course_week%>"
+                      data-room="<%= @schedule[i][j].class_room%>"
+                      rel="drevil">
+                        <%= @schedule[i][j].name%>
+                      </a>
+                    </td>
+                  <% else %>
+                    <td></td>
+                  <% end %>
+                <% end %>
+              </tr>
             <% end %>
             </tbody>
           </table>
@@ -44,5 +57,31 @@
     </div>
   </div>
 </div>
-
-
+<script>
+  $(function(){
+    $("[rel=drevil]").popover({
+      trigger:'manual',
+      placement : 'top', //placement of the popover. also can use top, bottom, left or right
+      trigger: 'hover',
+      container: 'body',
+      title: function() {
+        var data = $(this).data('rights');
+        return data;
+      },
+      html: 'true', //needed to show html of course
+      content: function() {
+        var course_week = $(this).data('week');
+        var course_room = $(this).data('room');
+        return course_week + "<br>" + course_room;
+      },
+      animation: false
+    }).on("mouseenter", function () {
+      var _this = this;
+      setTimeout(function () {
+        if (!$(".popover:hover").length) {
+          $(_this).popover("hide")
+        }
+      }, 3000);
+    });
+  });
+</script>

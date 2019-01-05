@@ -2,7 +2,7 @@ class CoursesController < ApplicationController
 
   include CoursesHelper
 
-  before_action :student_logged_in, only: [:select, :quit, :list, :prompt]
+  before_action :student_logged_in, only: [:select, :quit, :list, :prompt, :schedule]
   before_action :teacher_logged_in, only: [:new, :create, :edit, :destroy, :update, :open, :close]#add open by qiao
   before_action :logged_in, only: :index
 
@@ -87,7 +87,8 @@ class CoursesController < ApplicationController
   end
 
   def schedule
-    @schedule = get_schedule(current_user.courses)
+    graded_courses = current_user.grades.select {|grade| grade.grade.to_f > 0}.map {|grade| grade.course}
+    @schedule = get_schedule(current_user.courses-graded_courses)
   end
 
   def select
