@@ -44,6 +44,7 @@ module CoursesHelper
     end
     
     DateTransform = {"周一"=>1, "周二"=>2, "周三"=>3, "周四"=>4, "周五"=>5, "周六"=>6, "周日"=>7}
+    
     def get_schedule(courses)
         schedule = Array.new(7) {Array.new(11)}
         courses.each do |course|
@@ -54,6 +55,12 @@ module CoursesHelper
             end
         end
         schedule
+    end
+    
+    def get_course_time_triple(course)
+        course.course_time.scan(/(.*)\(([0-9]*)-([0-9]*)\)/) do |day, begintime, endtime|
+            return [DateTransform[day]-1, begintime.to_i-1, endtime.to_i-1]
+        end
     end
     
 end

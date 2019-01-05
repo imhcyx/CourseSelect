@@ -93,14 +93,37 @@ class CoursesController < ApplicationController
 
   def select
     @course=Course.find_by_id(params[:id])
+    course_names = current_user.courses.map {|course| course.name}
+    if course_names.include? @course.name
+      flash={:warning => "你过去已选择了课程：#{@course.name}"}
+      redirect_to list_courses_path, flash: flash
+      return
+    end
+    if @course.limit_num and @course.student_num>=@course.limit_num
+      flash={:warning => "课程选课人数已满：#{@course.name}"}
+      redirect_to list_courses_path, flash: flash
+      return
+    end
+    graded_courses = current_user.grades.select {|grade| grade.grade.to_f > 0}.map {|grade| grade.course}
+    schedule = get_schedule(current_user.courses-graded_courses)
+    triple = get_course_time_triple(@course)
+    for i in (triple[1])..(triple[2])
+      if (schedule[triple[0]][i])
+        flash={:warning => "待选课程：#{@course.name} 与已选课程：#{schedule[triple[0]][i].name} 时间冲突"}
+        redirect_to list_courses_path, flash: flash
+        return
+      end
+    end
+    @course.update_attributes(student_num: @course.student_num+1)
     current_user.courses<<@course
-    flash={:suceess => "成功选择课程: #{@course.name}"}
+    flash={:success => "成功选择课程: #{@course.name}"}
     redirect_to courses_path, flash: flash
   end
 
   def quit
     @course=Course.find_by_id(params[:id])
     current_user.courses.delete(@course)
+    @course.update_attributes(student_num: @course.student_num-1)
     flash={:success => "成功退选课程: #{@course.name}"}
     redirect_to courses_path, flash: flash
   end
